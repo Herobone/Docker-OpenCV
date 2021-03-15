@@ -3,7 +3,9 @@ name: build-full
 on:
   push:
   schedule:
-    - cron: '59 23 * * *' 
+    - cron: '59 23 * * *'
+  workflow_dispatch:
+
 
 jobs:
   build_full_amd64:
