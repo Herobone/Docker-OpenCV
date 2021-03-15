@@ -44,7 +44,7 @@ jobs:
           push: true
           repository: herobone/opencv
           platforms: linux/amd64
-          tags: latest, ${{ steps.opencv_version.outputs.release }}_full, full
+          tags: herobone/opencv:latest, herobone/opencv:${{ steps.opencv_version.outputs.release }}_full, herobone/opencv:full
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
       -
@@ -100,7 +100,7 @@ jobs:
           push: true
           repository: herobone/opencv
           platforms: linux/arm64
-          tags: latest, ${{ steps.opencv_version.outputs.release }}_full, full
+          tags: herobone/opencv:latest, herobone/opencv:${{ steps.opencv_version.outputs.release }}_full, herobone/opencv:full
           cache-from: type=local,src=/tmp/.buildx-cache-arm64
           cache-to: type=local,dest=/tmp/.buildx-cache-arm64-new
       -
@@ -154,9 +154,8 @@ jobs:
           context: ./images/full
           file: ./images/full/Dockerfile
           push: true
-          repository: herobone/opencv
           platforms: linux/arm/v7
-          tags: latest, ${{ steps.opencv_version.outputs.release }}_full, full
+          tags: herobone/opencv:latest, herobone/opencv:${{ steps.opencv_version.outputs.release }}_full, herobone/opencv:full
           cache-from: type=local,src=/tmp/.buildx-cache-armv7
           cache-to: type=local,dest=/tmp/.buildx-cache-armv7-new
     -
