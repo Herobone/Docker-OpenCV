@@ -112,7 +112,7 @@ jobs:
         run: |
           rm -rf /tmp/.buildx-cache-arm64
           mv /tmp/.buildx-cache-arm64-new /tmp/.buildx-cache-arm64
-  build_full_armv7:
+  build_full_armhf:
     runs-on: ubuntu-latest
     steps:
       -
@@ -134,7 +134,7 @@ jobs:
         name: Cache Docker layers
         uses: actions/cache@v2
         with:
-          path: /tmp/.buildx-cache-armv7
+          path: /tmp/.buildx-cache-armhf
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
@@ -154,8 +154,8 @@ jobs:
           push: true
           platforms: linux/arm/v7
           tags: herobone/opencv:latest, herobone/opencv:${{ steps.opencv_version.outputs.release }}_full, herobone/opencv:full
-          cache-from: type=local,src=/tmp/.buildx-cache-armv7
-          cache-to: type=local,dest=/tmp/.buildx-cache-armv7-new
+          cache-from: type=local,src=/tmp/.buildx-cache-armhf
+          cache-to: type=local,dest=/tmp/.buildx-cache-armhf-new
     -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
@@ -165,5 +165,5 @@ jobs:
         # https://github.com/moby/buildkit/issues/1896
         name: Move cache
         run: |
-          rm -rf /tmp/.buildx-cache-armv7
-          mv /tmp/.buildx-cache-armv7-new /tmp/.buildx-cache-armv7
+          rm -rf /tmp/.buildx-cache-armhf
+          mv /tmp/.buildx-cache-armhf-new /tmp/.buildx-cache-armhf
