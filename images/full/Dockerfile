@@ -4,9 +4,8 @@ RUN apt-get update && \
         curl unzip \
         cmake g++ gcc ninja-build \
         python3 python3-dev python3-numpy \
+        libavcodec-dev libavformat-dev libswscale-dev libavutil-dev \
         # GTK Support
-        libavcodec-dev libavformat-dev libswscale-dev \
-        libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev \
         libgtk-3-dev
 
 RUN \
@@ -19,7 +18,7 @@ RUN \
 RUN \
     echo "*** building opencv ***" && \
     mkdir -p .tmp/build && cd .tmp/build && \
-    cmake -DOPENCV_EXTRA_MODULES_PATH=../opencv-contrib/modules -GNinja ../opencv && \
+    cmake -DOPENCV_EXTRA_MODULES_PATH=../opencv-contrib/modules -DWITH_FFMPEG=ON -GNinja ../opencv && \
     ninja
 
 RUN \
@@ -31,9 +30,8 @@ FROM debian:stable-slim
 
 RUN apt-get update &&\
     apt-get install -y \
-        libavcodec-dev libavformat-dev libswscale-dev \
-        libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev \
         python3 python3-numpy \
+        libavcodec-dev libavformat-dev libswscale-dev libavutil-dev \
         cmake g++ gcc
 
 RUN apt-get install -y \
@@ -41,7 +39,6 @@ RUN apt-get install -y \
 
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /usr/local/lib /usr/local/lib
-#COPY --from=builder /usr/local/cmake/opencv4 /usr/local/cmake/opencv4
 COPY --from=builder /usr/local/include/opencv4 /usr/local/include/opencv4
 COPY --from=builder /usr/local/share/opencv4 /usr/local/share/opencv4
 
