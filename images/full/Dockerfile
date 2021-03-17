@@ -21,7 +21,7 @@ RUN \
     mkdir -p .tmp/build && cd .tmp/build && \
     cmake -DOPENCV_EXTRA_MODULES_PATH=../opencv-contrib/modules -GNinja ../opencv && \
     ninja
-    
+
 RUN \
     echo "*** installing opencv ***" && \
     cd .tmp/build && \
@@ -31,11 +31,18 @@ FROM debian:10
 
 RUN apt-get update &&\
     apt-get install -y \
+        libavcodec-dev libavformat-dev libswscale-dev \
+        libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev \
         python3 python3-numpy \
         cmake g++ gcc
+
+RUN apt-get install -y \
+        libgtk-3-dev
 
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /usr/local/lib /usr/local/lib
 #COPY --from=builder /usr/local/cmake/opencv4 /usr/local/cmake/opencv4
 COPY --from=builder /usr/local/include/opencv4 /usr/local/include/opencv4
 COPY --from=builder /usr/local/share/opencv4 /usr/local/share/opencv4
+
+RUN rm -rf /var/lib/apt/lists/*
