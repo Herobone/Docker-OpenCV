@@ -1,9 +1,11 @@
-FROM alpine:3 as builder
-RUN apk add --no-cache \
-    curl unzip \
-    cmake g++ gcc ninja \
-    python3-dev python3 py3-numpy \
-    linux-headers
+FROM debian:stable-slim as builder
+RUN apt-get update && \
+    apt-get install -y \
+        curl unzip \
+        cmake g++ gcc ninja-build \
+        python3 python3-dev python3-numpy \
+        libavcodec-dev libavformat-dev libswscale-dev \
+        libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev
 
 RUN \
     echo "*** cloning opencv ***" && \
@@ -16,7 +18,7 @@ RUN \
 RUN \
     echo "*** building opencv ***" && \
     mkdir -p .tmp/build && cd .tmp/build && \
-    cmake -DOPENCV_EXTRA_MODULES_PATH=../opencv-contrib/modules -DBUILD_opencv_wechat_qrcode=OFF -GNinja ../opencv && \
+    cmake -DOPENCV_EXTRA_MODULES_PATH=../opencv-contrib/modules -GNinja ../opencv && \
     ninja
 
 RUN \
@@ -26,11 +28,16 @@ RUN \
 
 FROM alpine:3
 
-RUN apk add --no-cache \
-    python3 py3-numpy \
-    cmake g++ gcc ninja
+RUN apt-get update &&\
+    apt-get install -y \
+        libavcodec-dev libavformat-dev libswscale-dev \
+        libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev \
+        python3 python3-numpy \
+        cmake g++ gcc ninja-build
 
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /usr/local/lib /usr/local/lib
 COPY --from=builder /usr/local/include/opencv4 /usr/local/include/opencv4
 COPY --from=builder /usr/local/share/opencv4 /usr/local/share/opencv4
+
+RUN rm -rf /var/lib/apt/lists/*
