@@ -1,4 +1,4 @@
-FROM debian:10 as builder
+FROM debian:stable-slim as builder
 RUN apt-get update && \
     apt-get install -y \
         curl unzip \
@@ -27,7 +27,7 @@ RUN \
     cd .tmp/build && \
     ninja install
 
-FROM debian:10
+FROM debian:stable-slim
 
 RUN apt-get update &&\
     apt-get install -y \

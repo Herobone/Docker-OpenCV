@@ -26,7 +26,7 @@ RUN \
     cd .tmp/build && \
     ninja install
 
-FROM alpine:3
+FROM debian:stable-slim
 
 RUN apt-get update &&\
     apt-get install -y \
