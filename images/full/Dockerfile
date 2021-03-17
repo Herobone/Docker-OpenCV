@@ -1,30 +1,41 @@
-FROM debian:10
+FROM debian:10 as builder
 RUN apt-get update && \
     apt-get install -y \
         curl unzip \
-        cmake g++ gcc \
+        cmake g++ gcc ninja-build \
         python3 python3-dev python3-numpy \
         # GTK Support
         libavcodec-dev libavformat-dev libswscale-dev \
         libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev \
-        libgtk-3-dev \
-        # Image libs
-        libpng-dev libjpeg-dev libopenexr-dev libtiff-dev libwebp-dev \
-        git
+        libgtk-3-dev
 
 RUN \
     echo "*** cloning opencv ***" && \
     mkdir .tmp && \
     curl -fSL -o .tmp/opencv.zip https://github.com/opencv/opencv/archive/master.zip && \
-    unzip .tmp/opencv.zip && mv opencv-master .tmp/opencv && \
+    unzip -q .tmp/opencv.zip && mv opencv-master .tmp/opencv && \
     curl -fSL -o .tmp/opencv-contrib.zip https://github.com/opencv/opencv_contrib/archive/master.zip && \
-    unzip .tmp/opencv-contrib.zip && mv opencv_contrib-master .tmp/opencv-contrib && \
+    unzip -q .tmp/opencv-contrib.zip && mv opencv_contrib-master .tmp/opencv-contrib
+RUN \
     echo "*** building opencv ***" && \
     mkdir -p .tmp/build && cd .tmp/build && \
-    cmake -DOPENCV_EXTRA_MODULES_PATH=../opencv-contrib/modules ../opencv && \
-    make -j6 && \
+    cmake -DOPENCV_EXTRA_MODULES_PATH=../opencv-contrib/modules -GNinja ../opencv && \
+    ninja
+    
+RUN \
     echo "*** installing opencv ***" && \
-    make install && \
-    echo "*** cleanup ***" && \
-    cd / && rm -r .tmp && \
-    rm -rf /var/lib/apt/lists/*
+    cd .tmp/build && \
+    ninja install
+
+FROM debian:10
+
+RUN apt-get update &&\
+    apt-get install -y \
+        python3 python3-numpy \
+        cmake g++ gcc
+
+COPY --from=builder /usr/local/bin /usr/local/bin
+COPY --from=builder /usr/local/lib /usr/local/lib
+#COPY --from=builder /usr/local/cmake/opencv4 /usr/local/cmake/opencv4
+COPY --from=builder /usr/local/include/opencv4 /usr/local/include/opencv4
+COPY --from=builder /usr/local/share/opencv4 /usr/local/share/opencv4
