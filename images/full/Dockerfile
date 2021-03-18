@@ -1,7 +1,7 @@
 FROM debian:stable-slim as builder
 RUN apt-get update && \
-    apt-get install -y \
-        curl unzip \
+    apt-get install -y --no-install-recommends \
+        curl unzip ca-certificates \
         cmake g++ gcc ninja-build \
         python3 python3-dev python3-numpy \
         libavcodec-dev libavformat-dev libswscale-dev libavutil-dev \
@@ -29,17 +29,16 @@ RUN \
 FROM debian:stable-slim
 
 RUN apt-get update &&\
-    apt-get install -y \
+    apt-get install -y --no-install-recommends \
         python3 python3-numpy \
         libavcodec-dev libavformat-dev libswscale-dev libavutil-dev \
         cmake g++ gcc
 
-RUN apt-get install -y \
-        libgtk-3-dev
+RUN apt-get install -y --no-install-recommends \
+        libgtk-3-dev && \
+	rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /usr/local/lib /usr/local/lib
 COPY --from=builder /usr/local/include/opencv4 /usr/local/include/opencv4
 COPY --from=builder /usr/local/share/opencv4 /usr/local/share/opencv4
-
-RUN rm -rf /var/lib/apt/lists/*
