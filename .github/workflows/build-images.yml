@@ -48,7 +48,7 @@ jobs:
           context: ./images/full
           file: ./images/full/Dockerfile
           push: true
-          platforms: linux/amd64, linux/amd64
+          platforms: linux/amd64,linux/amd64
           tags: herobone/opencv:latest, herobone/opencv:full_${{ steps.opencv_version.outputs.release }}, herobone/opencv:full
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
