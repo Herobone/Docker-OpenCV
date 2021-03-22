@@ -42,7 +42,6 @@ jobs:
           push: true
           platforms: linux/amd64,linux/amd64
           tags: herobone/opencv:latest, herobone/opencv:full_${{ steps.opencv_version.outputs.release }}, herobone/opencv:full
-          cache-from: type=registry,ref=herobone/opencv:full_cache
           cache-to: type=registry,ref=herobone/opencv:full_cache
       -
         name: Image digest
