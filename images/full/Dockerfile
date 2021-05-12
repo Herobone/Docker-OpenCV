@@ -25,8 +25,8 @@ RUN \
         -DOPENCV_EXTRA_MODULES_PATH=../opencv-contrib/modules \
         -DWITH_FFMPEG=ON \
         -GNinja \
-        -DBUILD_TESTS=ON \
-        -DBUILD_PERF_TESTS=ON \
+        -DBUILD_TESTS=OFF \
+        -DBUILD_PERF_TESTS=OFF \
         ../opencv && \
         ninja
 
