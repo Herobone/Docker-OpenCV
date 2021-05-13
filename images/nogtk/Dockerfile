@@ -21,6 +21,8 @@ RUN \
     cmake \
         -DOPENCV_EXTRA_MODULES_PATH=../opencv-contrib/modules \
         -DWITH_GTK=OFF \
+        -DBUILD_TESTS=OFF \
+        -DBUILD_PERF_TESTS=OFF \
         -GNinja ../opencv && \
     ninja
 

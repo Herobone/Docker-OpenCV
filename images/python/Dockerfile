@@ -19,7 +19,10 @@ RUN \
 RUN \
     echo "*** building opencv ***" && \
     mkdir -p .tmp/build && cd .tmp/build && \
-    cmake -DOPENCV_EXTRA_MODULES_PATH=../opencv-contrib/modules -GNinja ../opencv && \
+    cmake -DOPENCV_EXTRA_MODULES_PATH=../opencv-contrib/modules \ 
+        -DBUILD_TESTS=OFF \
+        -DBUILD_PERF_TESTS=OFF \
+        -GNinja ../opencv && \
     ninja
 
 RUN \
