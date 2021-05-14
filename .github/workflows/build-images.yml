@@ -95,6 +95,6 @@ jobs:
       -
         name: Build and Push
         run: |
-          docker buildx build --platform linux/amd64,linux/arm64 --push -t herobone/opencv:nogtk -t "herobone/opencv:nogtk-${OPENCV_VERSION}" ./images/python
+          docker buildx build --platform linux/amd64,linux/arm64 --push -t herobone/opencv:nogtk -t "herobone/opencv:nogtk-${OPENCV_VERSION}" ./images/nogtk
         env:
           OPENCV_VERSION: ${{ steps.opencv_version.outputs.release }}
